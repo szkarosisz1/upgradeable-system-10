@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+      RABBITMQ_LOAD_DEFINITIONS: /etc/rabbitmq/definitions.json
+
+  producer:
+    build: ./producer
+    depends_on:
+      - rabbitmq
+
+  consumer_b:
+    build: ./consumer_b
+    depends_on:
+      - rabbitmq
+
+  consumer_c:
+    build: ./consumer_c
+    depends_on:
+      - rabbitmq
