@@ -1,0 +1,10 @@
+{
+    "users": [{"name": "user", "password": "pass", "tags": "administrator"}],
+    "vhosts": [{"name": "/"}],
+    "permissions": [{"user": "user", "vhost": "/", "configure": ".*", "write": ".*", "read": ".*"}],
+    "queues": [
+      {"name": "tasks", "vhost": "/", "durable": true},
+      {"name": "finishedTasks", "vhost": "/", "durable": true},
+      {"name": "invalidTasks", "vhost": "/", "durable": true}
+    ]
+  }
