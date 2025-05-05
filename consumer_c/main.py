@@ -21,13 +21,18 @@ def callback(ch, method, properties, body):
     except json.JSONDecodeError:
         print(f"[Consumer C] Received non-JSON message: {body}")
     time.sleep(5)
-    channel.basic_publish(
-        exchange="",
-        routing_key="tasks",
-        body=body,
-        properties=pika.BasicProperties(delivery_mode=2)
-    )
+    try:
+        channel.basic_publish(
+            exchange="",
+            routing_key="tasks",
+            body=body,
+            properties=pika.BasicProperties(delivery_mode=2)
+        )
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    except Exception as e:
+        print(f"[Consumer C] Failed to requeue message: {e}")
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
-channel.basic_consume(queue="invalidTasks", on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue="invalidTasks", on_message_callback=callback, auto_ack=False)
 print('[Consumer C] Waiting for invalid messages...')
 channel.start_consuming()

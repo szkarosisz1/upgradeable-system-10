@@ -1,8 +1,7 @@
-import pika, json, time, os 
+import pika, json, time, os
 
 version = os.getenv("MESSAGE_VERSION", "V1.0")
 
-# Retry connection
 while True:
     try:
         connection = pika.BlockingConnection(
